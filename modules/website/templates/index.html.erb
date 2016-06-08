@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>Hello</title>
+	<style>
+		table,th,td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+		th,td {
+			padding: 5px;
+		}
+	</style>
+	</head>
+
+	<body>
+
+		<h1>Hello, <%= @greetname %></h1>
+
+		<table style="width:25%">
+		<tr>
+			<th>State</th>
+			<th>Abbreviation</th>
+		</tr>
+		
+		<?php
+		$servername = "192.168.33.10";
+		$username = "root";
+		$password = "test123";
+		$dbname = "mysql";
+
+		// Create connection
+		$conn = new mysqli($servername, $username, $password, $dbname);
+		// Check connection
+		if ($conn->connect_error) {
+			 die("Connection failed: " . $conn->connect_error);
+		} 
+
+		$sql = "SELECT state,abbreviation FROM devopslab";
+		$result = $conn->query($sql);
+
+		if ($result->num_rows > 0) {
+			 // output data of each row
+			 while($row = $result->fetch_assoc()) {
+				 echo "<tr> <td>". $row["state"]. " </td> <td> ". $row["abbreviation"]. "</td> </tr>";
+			 }
+		} else {
+			 echo "0 results";
+		}
+
+		$conn->close();
+		?>  
+		
+		</table>
+		
+		<p>
+			This was installed on <%= @fqdn %> by user <%= @id %>
+		</p>
+		
+	</body>
+
+</html>
