@@ -28,15 +28,16 @@ Vagrant.configure(2) do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.define "www" do |www|
-	  www.vm.hostname = "www"
-	  www.vm.network "private_network", ip: "192.168.33.11"
-  end
   config.vm.define "db" do |db|
 	  db.vm.hostname = "db"
 	  db.vm.network "private_network", ip: "192.168.33.10"
   end
-  
+
+  config.vm.define "www" do |www|
+	  www.vm.hostname = "www"
+	  www.vm.network "private_network", ip: "192.168.33.11"
+  end
+ 
   config.vm.define "selenium" do |selenium|
 		selenium.vm.hostname = "selenium"
 		selenium.vm.network "private_network", ip: "192.168.33.12"
@@ -83,6 +84,7 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 	config.vm.provision :shell, inline: <<-SHELL
+		config.puppet_install.puppet_version = :latest
 		wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
 		sudo dpkg -i puppetlabs-release-precise.deb
 		sudo apt-get update
@@ -91,27 +93,20 @@ Vagrant.configure(2) do |config|
 		sudo puppet module install puppetlabs-ntp
 		sudo apt-get install mysql-client-core-5.5
 		
-		sudo apt-get install -y python-software-properties
-		echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-		sudo add-apt-repository ppa:webupd8team/java -y
-		sudo apt-get update
-		sudo apt-get install oracle-java8-installer
-		echo "Setting environment variables for Java 8.."
-		sudo apt-get install -y oracle-java8-set-default
+#		sudo apt-get install -y python-software-properties
+#		echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+#		sudo add-apt-repository ppa:webupd8team/java -y
+#		sudo apt-get update
+#		sudo apt-get install oracle-java8-installer
+#		echo "Setting environment variables for Java 8.."
+#		sudo apt-get install -y oracle-java8-set-default
 		SHELL
 		
-	config.vm.provision "puppet" do |puppet|
-		puppet.manifests_path = "manifests"
-		puppet.manifest_file = "site.pp"
-		puppet.module_path = "modules"
-		puppet.hiera_config_path = "hiera.yaml"
-
-		if not (ENV['PUPPET_ENV']).nil?
-			puppet.options = "--environment", ENV['PUPPET_ENV']
-		end
-
-	#copy the table to db server to import into mysql.devopslab table
-	#config.vm.provision "file", source: "~/Documents/Projects/DevOpsLab/modules/database/StateTable.txt", destination: "/home/vagrant/StateTable.txt"
-	end
+#	config.vm.provision "puppet" do |puppet|
+#		puppet.manifests_path = "manifests"
+#		puppet.manifest_file = "site.pp"
+#		puppet.module_path = "modules"
+#		puppet.hiera_config_path = "hiera.yaml"
+#	end 
 
 end
