@@ -9,4 +9,5 @@ node /^db.*$/ {
 
 node /^selenium.*$/ {
 	include selenium
+	include '::java'
 }

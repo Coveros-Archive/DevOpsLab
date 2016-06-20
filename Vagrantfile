@@ -84,14 +84,13 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 	config.vm.provision :shell, inline: <<-SHELL
-		config.puppet_install.puppet_version = :latest
 		wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
 		sudo dpkg -i puppetlabs-release-precise.deb
 		sudo apt-get update
 		sudo apt-get install -y puppet hiera
 		sudo puppet module install puppetlabs-mysql
+		sudo puppet module install puppetlabs-java
 		sudo puppet module install puppetlabs-ntp
-		sudo apt-get install mysql-client-core-5.5
 		
 #		sudo apt-get install -y python-software-properties
 #		echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
@@ -102,11 +101,11 @@ Vagrant.configure(2) do |config|
 #		sudo apt-get install -y oracle-java8-set-default
 		SHELL
 		
-#	config.vm.provision "puppet" do |puppet|
-#		puppet.manifests_path = "manifests"
-#		puppet.manifest_file = "site.pp"
-#		puppet.module_path = "modules"
-#		puppet.hiera_config_path = "hiera.yaml"
-#	end 
+	config.vm.provision "puppet" do |puppet|
+		puppet.manifests_path = "manifests"
+		puppet.manifest_file = "site.pp"
+		puppet.module_path = "modules"
+		puppet.hiera_config_path = "hiera.yaml"
+	end 
 
 end
